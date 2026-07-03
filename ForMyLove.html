@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love ❤️</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(233, 30, 99, 0.15);
+            backdrop-filter: blur(20px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            color: #c2185b;
+            margin-bottom: 4px;
+        }
+
+        .header .name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3em;
+            color: #e91e63;
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+
+        .header p {
+            color: #ad1457;
+            font-size: 1em;
+            opacity: 0.8;
+        }
+
+        .heart-divider {
+            text-align: center;
+            font-size: 1.8em;
+            margin: 25px 0;
+            color: #e91e63;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #f8bbd0;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .question:last-of-type { border-bottom: none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            font-size: 0.8em;
+            color: #e91e63;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .question-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15em;
+            color: #4a1a2c;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .question-label .section-badge {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55em;
+            font-weight: 500;
+            background: #fce4ec;
+            color: #c2185b;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #f8bbd0;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-family: 'Inter', sans-serif;
+            color: #333;
+            background: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+            resize: vertical;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            border-color: #e91e63;
+            box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1);
+        }
+
+        textarea { min-height: 60px; }
+
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #f8bbd0;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-family: 'Inter', sans-serif;
+            color: #333;
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23e91e63' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        select:focus {
+            border-color: #e91e63;
+            box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 2px solid #f8bbd0;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-group label:hover { border-color: #e91e63; background: #fce4ec; }
+
+        .radio-group input[type="radio"]:checked + span {
+            color: #c2185b;
+            font-weight: 500;
+        }
+
+        .radio-group input[type="radio"]:checked ~ label,
+        .radio-group label:has(input:checked) {
+            border-color: #e91e63;
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .radio-group input { display: none; }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.15em;
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.35);
+        }
+
+        .btn-submit:active { transform: translateY(0); }
+
+        .hidden { display: none; }
+
+        /* Results Page */
+        .results {
+            text-align: center;
+        }
+
+        .results h2 {
+            font-family: 'Playfair Display', serif;
+            color: #c2185b;
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .results .subtitle {
+            color: #ad1457;
+            font-size: 1.05em;
+            margin-bottom: 30px;
+            opacity: 0.85;
+        }
+
+        .result-item {
+            background: #fce4ec;
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            text-align: left;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .result-item .r-question {
+            font-size: 0.85em;
+            color: #c2185b;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .result-item .r-answer {
+            font-size: 1em;
+            color: #333;
+            font-weight: 400;
+        }
+
+        .love-letter {
+            margin-top: 35px;
+            padding: 30px;
+            background: linear-gradient(135deg, #fff0f5, #fce4ec);
+            border-radius: 20px;
+            border: 2px solid #f8bbd0;
+        }
+
+        .love-letter h3 {
+            font-family: 'Playfair Display', serif;
+            color: #c2185b;
+            font-size: 1.4em;
+            margin-bottom: 12px;
+        }
+
+        .love-letter p {
+            color: #4a1a2c;
+            line-height: 1.8;
+            font-size: 1em;
+        }
+
+        .btn-print {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #fff;
+            color: #c2185b;
+            border: 2px solid #c2185b;
+            border-radius: 30px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn-print:hover {
+            background: #c2185b;
+            color: #fff;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #f8bbd0;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e91e63, #c2185b);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 30px 20px; }
+            .header h1 { font-size: 1.6em; }
+            .radio-group label { font-size: 0.8em; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <div class="header">
+        <div class="name">This is for you</div>
+        <h1>Mouna </h1>
+        <p>A journey into your heart, your soul & our future</p>
+    </div>
+
+    <div class="heart-divider">&#10084;&#65039;</div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <form id="quizForm">
+        <div id="questionsContainer"></div>
+        <button type="submit" class="btn-submit">Show Our Story &#10084;&#65039;</button>
+    </form>
+
+    <div id="resultsContainer" class="results hidden"></div>
+</div>
+
+<script>
+    const questions = [
+        // --- Nickname (1st question) ---
+        {
+            section: 'Nickname',
+            q: "What pet name or nickname do you want me to call you?",
+            type: 'text',
+            placeholder: "Whatever makes your heart smile..."
+        },
+        // --- Her Character (2-9) ---
+        {
+            section: 'Character',
+            q: "How would you describe your personality in a few words?",
+            type: 'text',
+            placeholder: "Shy, outgoing, calm, fiery, something in between?"
+        },
+        {
+            section: 'Character',
+            q: "On a scale of calm to fiery, where do you fall? And what's one thing that really tests your patience?",
+            type: 'textarea',
+            placeholder: "What gets under your skin?"
+        },
+        {
+            section: 'Character',
+            q: "When you get angry, how do you usually react?",
+            type: 'text',
+            placeholder: "Silent treatment, speaking your mind, needing space?"
+        },
+        {
+            section: 'Character',
+            q: "What calms you down when you're upset?",
+            type: 'text',
+            placeholder: "Music, a hug, alone time, talking it out?"
+        },
+        {
+            section: 'Character',
+            q: "What do you love most about yourself?",
+            type: 'textarea',
+            placeholder: "Your heart, your mind, your strength, your smile..."
+        },
+        {
+            section: 'Character',
+            q: "What's one thing you're working on to become a better version of yourself?",
+            type: 'text',
+            placeholder: "We're all growing, what's your journey?"
+        },
+        {
+            section: 'Character',
+            q: "What makes you feel truly understood?",
+            type: 'text',
+            placeholder: "A deep conversation, a warm embrace, a knowing look?"
+        },
+        {
+            section: 'Character',
+            q: "If your life was a book, what would the title be?",
+            type: 'text',
+            placeholder: "The story of you..."
+        },
+        // --- About Us & Me (10-15) ---
+        {
+            section: 'Us',
+            q: "What do you like most about me?",
+            type: 'textarea',
+            placeholder: "The little things, the big things, everything..."
+        },
+        {
+            section: 'Us',
+            q: "What's one thing I do that makes you feel loved?",
+            type: 'text',
+            placeholder: "How do you know I love you?"
+        },
+        {
+            section: 'Us',
+            q: "What's your favorite memory of us together?",
+            type: 'textarea',
+            placeholder: "The moment you knew this was forever..."
+        },
+        {
+            section: 'Us',
+            q: "What do you think makes our relationship special?",
+            type: 'textarea',
+            placeholder: "What we have that no one else does..."
+        },
+        {
+            section: 'Us',
+            q: "If you could describe our love in one word, what would it be?",
+            type: 'text',
+            placeholder: "One word that says it all..."
+        },
+        {
+            section: 'Us',
+            q: "What's a funny or silly thing you love about us as a couple?",
+            type: 'text',
+            placeholder: "Inside jokes, shared quirks, our weirdness..."
+        },
+        // --- Marriage & Future (16-21) ---
+        {
+            section: 'Marriage',
+            q: "What does marriage mean to you?",
+            type: 'textarea',
+            placeholder: "Share what's in your heart..."
+        },
+        {
+            section: 'Marriage',
+            q: "Where do you see us in 10 years?",
+            type: 'textarea',
+            placeholder: "Our home, our life, our happiness..."
+        },
+        {
+            section: 'Marriage',
+            q: "What's one promise you want us to make to each other?",
+            type: 'textarea',
+            placeholder: "Something we'll always hold dear..."
+        },
+        {
+            section: 'Marriage',
+            q: "What are you most excited about regarding marriage?",
+            type: 'textarea',
+            placeholder: "Waking up together, building a home, growing old..."
+        },
+        {
+            section: 'Marriage',
+            q: "What's a dream you want us to chase together?",
+            type: 'text',
+            placeholder: "A place to live, a business, an adventure?"
+        },
+        {
+            section: 'Marriage',
+            q: "Write a message to your future husband ❤️",
+            type: 'textarea',
+            placeholder: "Anything from the depths of your heart..."
+        }
+    ];
+
+    const container = document.getElementById('questionsContainer');
+    const form = document.getElementById('quizForm');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const progressFill = document.getElementById('progressFill');
+
+    let currentAnswers = {};
+
+    function renderQuestions() {
+        let html = '';
+        questions.forEach((q, i) => {
+            let badge = '';
+            if (q.section === 'Nickname') badge = '<span class="section-badge">&#10084; You</span>';
+            else if (q.section === 'Character') badge = '<span class="section-badge">&#10084; Character</span>';
+            else if (q.section === 'Us') badge = '<span class="section-badge">&#10070; Us</span>';
+            else badge = '<span class="section-badge">&#10047; Marriage</span>';
+            const sectionBadge = badge;
+
+            html += `<div class="question" data-index="${i}">`;
+            html += `<div class="question-number">Question ${i + 1} of ${questions.length}</div>`;
+            html += `<div class="question-label">${q.q} ${sectionBadge}</div>`;
+
+            if (q.type === 'text') {
+                html += `<input type="text" id="q${i}" placeholder="${q.placeholder || ''}" data-index="${i}">`;
+            } else if (q.type === 'textarea') {
+                html += `<textarea id="q${i}" placeholder="${q.placeholder || ''}" rows="3" data-index="${i}"></textarea>`;
+            } else if (q.type === 'select') {
+                html += `<select id="q${i}" data-index="${i}"><option value="">Select...</option>`;
+                q.options.forEach(opt => {
+                    html += `<option value="${opt}">${opt}</option>`;
+                });
+                html += `</select>`;
+            }
+
+            html += `</div>`;
+        });
+        container.innerHTML = html;
+
+        // Add input listeners for progress tracking
+        document.querySelectorAll('input, textarea, select').forEach(el => {
+            el.addEventListener('input', updateProgress);
+            el.addEventListener('change', updateProgress);
+        });
+    }
+
+    function updateProgress() {
+        let filled = 0;
+        questions.forEach((q, i) => {
+            const el = document.getElementById(`q${i}`);
+            if (el) {
+                const val = el.value.trim();
+                if (val) filled++;
+            }
+        });
+        const pct = (filled / questions.length) * 100;
+        progressFill.style.width = pct + '%';
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let allFilled = true;
+        let answers = {};
+        questions.forEach((q, i) => {
+            const el = document.getElementById(`q${i}`);
+            if (el) {
+                const val = el.value.trim();
+                answers[i] = val || '(no answer)';
+                if (!val) allFilled = false;
+            }
+        });
+
+        if (!allFilled) {
+            if (!confirm("Some questions are empty — that's okay! Show results anyway?")) {
+                return;
+            }
+        }
+
+        currentAnswers = answers;
+        showResults(answers);
+    });
+
+    function showResults(answers) {
+        form.classList.add('hidden');
+        resultsContainer.classList.remove('hidden');
+
+        let nick = answers[0] || 'Mouna';
+
+        let html = '';
+        html += `<h2>Our Story &#10084;&#65039;</h2>`;
+        html += `<p class="subtitle">Every answer is a beautiful piece of you, ${nick}</p>`;
+
+        questions.forEach((q, i) => {
+            let icon = '&#10084;';
+            if (q.section === 'Nickname') icon = '&#10084;';
+            else if (q.section === 'Character') icon = '&#10084;';
+            else if (q.section === 'Us') icon = '&#10070;';
+            else icon = '&#10047;';
+            html += `<div class="result-item" style="animation-delay: ${i * 0.05}s">`;
+            html += `<div class="r-question">${icon} ${q.q}</div>`;
+            html += `<div class="r-answer">${answers[i] || '(no answer)'}</div>`;
+            html += `</div>`;
+        });
+
+        html += `
+        <div class="love-letter">
+            <h3>A Letter to You &#10084;&#65039;</h3>
+            <p>
+            My love,<br><br>
+                Every answer you've written is a treasure I'll hold close to my heart.
+                Your character, your dreams, your laughter, your love — they all paint the
+                most beautiful picture of the woman I can't wait to marry.<br><br>
+                ${nick}, you are calm like the sea and fierce like the waves, and I love
+                every side of you. I love what you love about yourself, and I love what
+                you see in me. This is just the beginning of our forever.<br><br>
+                I promise to cherish every part of you, to grow with you, to dance with
+                you in the kitchen, and to love you more with each passing day.<br><br>
+                Thank you for being you. Thank you for saying yes.<br><br>
+                Forever yours,<br>
+                <strong style="font-family: 'Playfair Display', serif; color: #c2185b;">[Edit: Your Name here]</strong>
+            </p>
+        </div>
+        <button class="btn-print" onclick="window.print()">&#128214; Save or Print This</button>
+        <button class="btn-print" style="margin-left:10px" onclick="location.reload()">&#8634; Start Over</button>
+        `;
+
+        resultsContainer.innerHTML = html;
+
+        // Scroll to results
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    renderQuestions();
+</script>
+
+</body>
+</html>
