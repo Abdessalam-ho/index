@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Message for You 🤍</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif; background: #0a0e27; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 30px 16px; overflow-x: hidden;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&family=Tajawal:wght@400;500&display=swap');
+
+        #sky {
+            position: fixed; inset: 0; z-index: 0;
+            background: linear-gradient(180deg, rgba(10,14,39,0.7) 0%, rgba(26,16,64,0.7) 40%, rgba(45,27,105,0.7) 70%, rgba(26,16,64,0.7) 100%), url('bg.jpg') center/cover no-repeat;
+        }
+        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--dur) ease-in-out infinite alternate; }
+        @keyframes twinkle { 0% { opacity: 0.15; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.3); } }
+
+        .container {
+            position: relative; z-index: 10; max-width: 680px; width: 100%;
+            background: rgba(255,255,255,0.07); backdrop-filter: blur(28px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 28px;
+            padding: 40px 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .intro {
+            text-align: center; padding: 30px 0;
+        }
+        .intro h1 {
+            font-family: 'Playfair Display', serif; font-size: 2.2em;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0, #f5e6a3);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 8px;
+        }
+        .intro p {
+            color: rgba(255,255,255,0.3); font-size: 0.85em; font-style: italic;
+        }
+
+        .password-section {
+            text-align: center; margin: 20px 0;
+        }
+        .password-section label {
+            display: block; font-family: 'Playfair Display', serif;
+            font-size: 1.1em; color: rgba(255,255,255,0.7); margin-bottom: 12px;
+        }
+        .password-section .hint {
+            font-size: 0.8em; color: rgba(245,230,163,0.4); margin-bottom: 14px;
+            font-style: italic;
+        }
+        .password-input-wrap {
+            display: flex; gap: 10px; justify-content: center; align-items: center;
+        }
+        .password-input-wrap input {
+            padding: 12px 16px; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
+            font-size: 1.1em; font-family: 'Inter', sans-serif; color: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.06); outline: none; width: 200px; text-align: center;
+            letter-spacing: 4px; transition: border-color 0.3s;
+        }
+        .password-input-wrap input:focus {
+            border-color: rgba(233,30,99,0.4); box-shadow: 0 0 0 3px rgba(233,30,99,0.08);
+        }
+        .password-input-wrap button {
+            padding: 12px 24px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #e91e63, #c2185b); color: #fff;
+            font-family: 'Playfair Display', serif; font-size: 0.95em; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .password-input-wrap button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(233,30,99,0.3); }
+        .password-input-wrap button:disabled { opacity: 0.4; cursor: default; transform: none; }
+        .password-error {
+            color: #ef9a9a; font-size: 0.8em; margin-top: 8px; min-height: 20px;
+        }
+        .password-success {
+            color: #a5d6a7; font-size: 0.8em; margin-top: 8px;
+        }
+
+        .hidden { display: none; }
+
+        .message {
+            animation: fadeIn 0.8s ease-out;
+        }
+        .message .title {
+            text-align: center; font-family: 'Playfair Display', serif;
+            font-size: 1.3em; color: #f8bbd0; margin-bottom: 16px;
+        }
+        .message .content {
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            font-size: 0.95em; color: rgba(255,255,255,0.85); line-height: 1.8;
+            white-space: pre-wrap;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .message .content .fr {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78em; color: rgba(255,255,255,0.3);
+            margin-top: 2px; margin-bottom: 8px;
+            display: block;
+        }
+        .message .separator {
+            text-align: center; color: rgba(233,30,99,0.3); margin: 8px 0;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .container { padding: 24px 16px; }
+            .intro h1 { font-size: 1.6em; }
+            .password-input-wrap { flex-direction: column; }
+            .password-input-wrap input { width: 100%; }
+            .message .content { max-height: 400px; font-size: 0.88em; padding: 12px 14px; }
+        }
+    </style>
+</head>
+<body>
+<div id="sky"></div>
+<div class="container">
+    <div id="introSection" class="intro">
+        <h1>This is a message for you 🤍</h1>
+        <p>C'est un message pour toi 🤍</p>
+    </div>
+
+    <div id="passwordSection" class="password-section">
+        <label>Enter the password to read your message</label>
+        <div class="hint">&#128161; Hint: your favorite name to be called with</div>
+        <div class="password-input-wrap">
+            <input type="password" id="passwordInput" placeholder="••••" maxlength="4" autocomplete="off">
+            <button id="unlockBtn" onclick="checkPassword()">Open &#10084;</button>
+        </div>
+        <div id="passwordStatus" class="password-error"></div>
+    </div>
+
+    <div id="messageSection" class="message hidden">
+        <div class="title">&#10084;&#65039; A message from your heart &#10084;&#65039;</div>
+        <div class="content" id="messageContent"></div>
+    </div>
+</div>
+
+<script>
+    function createStars() {
+        const sky = document.getElementById('sky');
+        for (let i = 0; i < 80; i++) {
+            const s = document.createElement('div'); s.className = 'star';
+            const sz = Math.random() * 3 + 1;
+            s.style.width = sz + 'px'; s.style.height = sz + 'px';
+            s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+            s.style.setProperty('--dur', (Math.random() * 3 + 2) + 's');
+            s.style.animationDelay = Math.random() * 5 + 's';
+            sky.appendChild(s);
+        }
+    }
+    createStars();
+
+    const correctPassword = 'baby';
+    let unlocked = false;
+
+    const msgContent = `Dear Baby 🤍,
+
+lyoum apres 3 mois mn li t3arfna c l occasion bach nktablek msg 🥰☺️ 9bel koulech n9olek what a beatiful 3 months 🥰 khalatek tkouni my favorite ou a9rab insan lia 🤍🥰 ... l insan li kan lia riz9 ou 3iwad mn rabi tjr nahmed rabi ou nad3ilek bel khir ☺️☺️... tu ss mkanach nhar mn nhar t3arfna makountich fi rasi wela khamamtch fik 🤍🤭🥰
+
+<span class="separator">&#10048;</span>
+
+kan n7eb nkteb 3lik mankamlch insana fik nia ☺️, ki tkoun 7adja mli7a tjr tchoukrini ou t9oulili you are perfect 🥹 malgre nadiha complement hada makan hhh 🤭 t7abi tada7ki ta7ki f n import sujet t7abi tt3almi ou bzzf 7adjat ou zid tahtami bia 🤍 manich jay hna bach n listihoum bel wa7da psq l msg iji twiilbzf ou mchra7 nkamel hhhh 🤭🤭
+
+<span class="separator">&#10048;</span>
+
+Hab n9olek bli raki 3ziza 3lia bzzzf bzzf 🤍 ya 9albiii ou hadi 7adja tkhalini nkhaf 3lik mn bzf 7adjat 🥺 kima ki mtkounich mli7a kan tt7agri kan tkouni 9l9ana t7azni nkhaf 3lik psq le monde li rana n3ichou fih myr7amch ch7el mn khrouf how f sa7 dib 😢 ... ou 7ata mn khofi 3lik tkhalini nghir 3lik bzf mn hadret nass ou surtt mn choufet nass ou mn rjal en genral psq n3ref l khobth dyalhoum ou tkhmam dyalhoum ☺️
+
+I wish kan t9adri tkouni rajel nhar bach tfahmi wsh rani n9olek hhhh 🤭🤭 jamais nnsa nhar 9ali papak 9ali m3a el mo7afada 3ajbatni bzzf 🥰🥹 7ta ou tla9it bih ou 3aref nayti bien ou ba3tli tswira mstoura ms hagdak ou ikhaf 3lik ou ighir 3lik 3jbatni bzf ou imathalni bi 9owa 🤭🤭hhhh ... imagini wa7ed tkoun tkoun 3ando tnobil chaba wsh idir ikhabiha tl9ayh ki i7ab ighariha fel garage my7thach win jat enotwayiha ikhaf 3liha yadana wa7ed blk juct ichoufha i3ayet 3lih wsh rak dir ajbed wela tl9ayh ghir i3ass 3liha ... etc 3mbalek tonobil matmathelch 7ta 0.00001% mnek hadik ttkhlef ms nti mttkhalfich 🥺🥺
+
+<span class="separator">&#10048;</span>
+
+diri fi balek ya houbii tan n7ab tjr nchoufek fer7ana 🥰 soit nfar7ek n3awnek fi 7adja ntal3lek el moral njiblek kach 7adja 7ass bli raha t7abiha wela tfar7ek wela mm ndirlek kach geste chbab ou lmba3d ki nkouno ensemble balak n7ab ndilek hadou ga3 ou ki tji l occasion madabia nvisiter m3ak ch7el mn placa ou njareb ch7el mn experience ( li jaw ou majawch fi rassek hhh) 🤭🤭
+
+<span class="separator">&#10048;</span>
+
+Mon amour 🤍 7ab tan n9lek bli jamais la tkhammi wela tkhali chitanek iwaswslek bli ra7 nchouf l ghirek wela tkhammi kachma ysralek wela mradti ra7 manwalich nchoufek kima nhar lawel 🥰 kounek hania raki m3amratli 3ini 🥰 ou ana ani nchoufek sa7bi ou hbibti ou future zawja... koulech ☺️🤭 .... ya 9albii tan tjr ki ntkhayel el future dyali ani ntkhaylek fih 🥰🥰 nhab ki n3tik el ihtimam ou lhnana tjr ikoun lik b zyada la b no9san ☺️ ... ra7 tkouni ms2oulia fi ra9bti 7ta nmoutou ... inchallah nti li tkounili mfta7 lbab el djana ou nkoun lik bel mithl 🥰🥹
+
+<span class="separator">&#10048;</span>
+
+inchallah 7ta ana n3amerlek 3inek ya danytyyy I Love u ❤️ keep doing what you are doing ou diri fi balek ani tjr hna for you ☺️ khalini 9rib lik ou ki t7tajini wa9t ma 7abiti aba3tili tjr 3andi wa9t lik bach nsma3lek ou n3awnek nrepondilek ndilek wsh khasek ☺️ ... you are the best baby 🥰🥰`;
+
+    function checkPassword() {
+        const input = document.getElementById('passwordInput');
+        const status = document.getElementById('passwordStatus');
+        const btn = document.getElementById('unlockBtn');
+        const pwd = input.value.trim().toLowerCase();
+
+        if (pwd !== correctPassword) {
+            status.textContent = '❌ Wrong password. Try again.';
+            status.className = 'password-error';
+            return;
+        }
+
+        status.textContent = '✅ Correct! Opening your message...';
+        status.className = 'password-success';
+        btn.disabled = true;
+        input.disabled = true;
+
+        // Send notification to email
+        fetch('https://formspree.io/f/xrewrldv', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                _subject: '💌 She opened your message!',
+                message: 'She entered the password and read your message 💌🤍'
+            })
+        }).catch(() => {});
+
+        setTimeout(() => {
+            document.getElementById('passwordSection').classList.add('hidden');
+            document.getElementById('messageContent').innerHTML = msgContent;
+            document.getElementById('messageSection').classList.remove('hidden');
+            document.getElementById('messageSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 1000);
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+</body>
+</html>
