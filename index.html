@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Would You Rather? 💭</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 30px 16px;
+            overflow-x: hidden;
+        }
+
+        #sky {
+            position: fixed; inset: 0; z-index: 0;
+            background: linear-gradient(180deg, rgba(10,14,39,0.65) 0%, rgba(26,16,64,0.65) 40%, rgba(45,27,105,0.65) 70%, rgba(26,16,64,0.65) 100%), url('bg.jpg') center/cover no-repeat;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute; background: #fff; border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.15; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.3); }
+        }
+
+        .container {
+            position: relative; z-index: 10; max-width: 580px; width: 100%;
+        }
+
+        .progress {
+            display: flex; justify-content: center; gap: 6px; margin-bottom: 20px;
+        }
+        .progress .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.4s;
+        }
+        .progress .dot.active { background: rgba(248,187,208,0.6); box-shadow: 0 0 10px rgba(248,187,208,0.2); }
+        .progress .dot.done { background: rgba(245,230,163,0.4); }
+
+        .q-card {
+            background: rgba(255,255,255,0.06); backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px; padding: 32px 28px 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-badge {
+            display: inline-block;
+            font-size: 0.7em;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(248,187,208,0.1);
+            color: rgba(248,187,208,0.5);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        .q-badge.puzzle {
+            background: rgba(245,230,163,0.1);
+            color: rgba(245,230,163,0.5);
+        }
+
+        .timer-bar {
+            height: 3px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+        .timer-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(233,30,99,0.4), rgba(245,230,163,0.4));
+            border-radius: 2px;
+            transition: width 1s linear;
+            width: 100%;
+        }
+        .timer-bar .fill.warning {
+            background: linear-gradient(90deg, rgba(233,30,99,0.5), rgba(239,154,154,0.5));
+        }
+        .timer-text {
+            font-size: 0.7em;
+            color: rgba(255,255,255,0.15);
+            text-align: right;
+            margin-bottom: 6px;
+        }
+
+        .q-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2em; line-height: 1.7;
+            color: rgba(240,230,225,0.85);
+            margin-bottom: 6px;
+        }
+        .q-text .highlight {
+            color: rgba(248,187,208,0.7);
+        }
+        .q-text .highlight2 {
+            color: rgba(245,230,163,0.6);
+        }
+        .q-text .fr {
+            display: block;
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.2);
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .q-options {
+            margin-top: 14px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .q-options .opt {
+            padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            color: rgba(240,230,225,0.7);
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+        .q-options .opt:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.12);
+        }
+        .q-options .opt.selected {
+            border-color: rgba(248,187,208,0.3);
+            background: rgba(248,187,208,0.06);
+            color: rgba(248,187,208,0.7);
+        }
+
+        .q-input {
+            margin-top: 14px;
+        }
+        .q-input input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            color: rgba(240,230,225,0.8);
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .q-input input:focus {
+            border-color: rgba(248,187,208,0.2);
+        }
+        .q-input input::placeholder {
+            color: rgba(255,255,255,0.12);
+            font-style: italic;
+        }
+
+        .scratch-area {
+            margin-top: 12px;
+        }
+        .scratch-area .label {
+            font-size: 0.65em;
+            color: rgba(255,255,255,0.1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .scratch-area textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px dashed rgba(255,255,255,0.04);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.01);
+            color: rgba(240,230,225,0.3);
+            font-family: 'Inter', monospace;
+            font-size: 0.8em;
+            outline: none;
+            resize: vertical;
+            min-height: 60px;
+            transition: border-color 0.3s;
+            line-height: 1.5;
+        }
+        .scratch-area textarea:focus {
+            border-color: rgba(255,255,255,0.08);
+            color: rgba(240,230,225,0.5);
+        }
+        .scratch-area textarea::placeholder {
+            color: rgba(255,255,255,0.04);
+            font-style: italic;
+        }
+
+        .special-msg {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: rgba(245,230,163,0.06);
+            border: 1px solid rgba(245,230,163,0.12);
+            border-radius: 10px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85em;
+            color: rgba(245,230,163,0.5);
+            text-align: center;
+            font-style: italic;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .trick-feedback {
+            margin-top: 14px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1em;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .trick-feedback.wrong {
+            background: rgba(239,154,154,0.06);
+            border: 1px solid rgba(239,154,154,0.15);
+            color: rgba(239,154,154,0.6);
+        }
+        .trick-feedback.correct {
+            background: rgba(165,214,167,0.06);
+            border: 1px solid rgba(165,214,167,0.15);
+            color: rgba(165,214,167,0.6);
+        }
+
+        .comment-area {
+            margin-top: 12px;
+        }
+        .comment-area textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px dashed rgba(255,255,255,0.06);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.02);
+            color: rgba(240,230,225,0.5);
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85em;
+            outline: none;
+            resize: vertical;
+            min-height: 50px;
+            transition: border-color 0.3s;
+        }
+        .comment-area textarea:focus {
+            border-color: rgba(248,187,208,0.15);
+            border-style: solid;
+            color: rgba(240,230,225,0.7);
+        }
+        .comment-area textarea::placeholder {
+            color: rgba(255,255,255,0.08);
+            font-style: italic;
+        }
+
+        .nav {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 16px;
+        }
+        .nav .q-counter {
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.15);
+        }
+        .nav-btn {
+            padding: 10px 24px;
+            border: none; border-radius: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85em; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-btn.next {
+            background: linear-gradient(135deg, rgba(233,30,99,0.3), rgba(194,24,91,0.3));
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .nav-btn.next:hover {
+            background: linear-gradient(135deg, rgba(233,30,99,0.4), rgba(194,24,91,0.4));
+            box-shadow: 0 8px 25px rgba(233,30,99,0.1);
+            transform: translateY(-2px);
+        }
+        .nav-btn.next:disabled {
+            opacity: 0.2; cursor: default; transform: none;
+        }
+        .nav-btn.prev {
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .nav-btn.prev:hover {
+            background: rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.4);
+        }
+        .nav-btn.finish {
+            background: linear-gradient(135deg, rgba(245,230,163,0.2), rgba(212,184,106,0.2));
+            color: rgba(245,230,163,0.7);
+        }
+        .nav-btn.finish:hover {
+            background: linear-gradient(135deg, rgba(245,230,163,0.3), rgba(212,184,106,0.3));
+            box-shadow: 0 8px 25px rgba(245,230,163,0.1);
+            transform: translateY(-2px);
+        }
+
+        .end-screen {
+            text-align: center; padding: 40px 20px;
+        }
+        .end-screen h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6em;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0, #f5e6a3);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        .end-screen p {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .hidden { display: none; }
+
+        .initials {
+            position: fixed; top: 16px; left: 16px;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4em;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,0.04);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 20px 12px; }
+            .q-card { padding: 24px 18px 16px; }
+            .q-text { font-size: 1.05em; }
+        }
+    </style>
+</head>
+<body>
+<div id="sky"></div>
+<div class="initials">M ♡ A</div>
+<div class="container" id="app">
+    <div class="progress" id="progress"></div>
+    <div id="questionArea"></div>
+</div>
+
+<script>
+    function createStars() {
+        const sky = document.getElementById('sky');
+        for (let i = 0; i < 60; i++) {
+            const s = document.createElement('div'); s.className = 'star';
+            const sz = Math.random() * 3 + 1;
+            s.style.width = sz + 'px'; s.style.height = sz + 'px';
+            s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+            s.style.setProperty('--dur', (Math.random() * 3 + 2) + 's');
+            s.style.animationDelay = Math.random() * 5 + 's';
+            sky.appendChild(s);
+        }
+    }
+    createStars();
+
+    const formspreeUrl = 'https://formspree.io/f/xrewrldv';
+
+    const questions = [
+        {
+            type: 'wyr',
+            input: true,
+            text: 'If <span class="highlight">money wasn\'t an issue</span>, what kind of <span class="highlight">business</span> would you think of starting?<span class="fr">Si l\'argent n\'était pas un problème, quel genre d\'entreprise imaginerais-tu lancer?</span>'
+        },
+        {
+            type: 'wyr',
+            input: true,
+            text: 'What\'s an <span class="highlight">unusual item or gadget</span> you would buy for your home? (7adja machi z3ma ga3 dyar ikoun fiha)<span class="fr">Quel gadget ou objet inhabituel achèterais-tu pour la maison?</span>'
+        },
+        {
+            type: 'wyr',
+            input: true,
+            text: 'If you had <span class="highlight">all the resources and means</span> you could ever wish for, what would you do with them?<span class="fr">Si tu avais toutes les ressources et moyens dont tu pourrais rêver, qu\'en ferais-tu?</span>'
+        },
+        {
+            type: 'wyr',
+            input: true,
+            text: 'What\'s a <span class="highlight">weird or unusual destination</span> you would want us to visit together? (destination matjich bzf fi ball nass)<span class="fr">Quelle destination étrange ou insolite aimerais-tu qu\'on visite ensemble?</span>'
+        },
+        {
+            type: 'wyr',
+            input: true,
+            text: 'What\'s something <span class="highlight">expensive</span> you would never buy? (en general kan tkouni capabel l koulech)<span class="fr">Quelle chose chère n\'achèterais-tu jamais?</span>'
+        }
+    ];
+
+    let current = 0;
+    let answers = {};
+    let comments = {};
+    let drafts = {};
+    let timerInterval = null;
+    let timeLeft = 0;
+
+    const progressEl = document.getElementById('progress');
+    const area = document.getElementById('questionArea');
+
+    function renderDots() {
+        progressEl.innerHTML = '';
+        questions.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            if (i === current) dot.classList.add('active');
+            else if (i < current || answers[i]) dot.classList.add('done');
+            progressEl.appendChild(dot);
+        });
+    }
+
+    function startTimer(seconds) {
+        timeLeft = seconds;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            const fill = document.getElementById('timerFill');
+            const txt = document.getElementById('timerText');
+            if (fill) fill.style.width = (timeLeft / seconds * 100) + '%';
+            if (txt) txt.textContent = timeLeft + 's';
+            if (timeLeft <= 10 && fill) fill.classList.add('warning');
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                // Auto-advance if answer exists, otherwise just stop
+                if (!answers[current]) {
+                    const q = questions[current];
+                    if (q.input) {
+                        const inp = document.getElementById('input-' + current);
+                        if (inp) answers[current] = inp.value || '(time ran out)';
+                    }
+                }
+                timerInterval = null;
+            }
+        }, 1000);
+    }
+
+    function renderQuestion() {
+        if (current >= questions.length) {
+            sendAll();
+            showEnd();
+            return;
+        }
+
+        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+
+        renderDots();
+        const q = questions[current];
+        const idx = current;
+
+        let html = `<div class="q-card">`;
+        html += `<div class="q-badge ${q.type === 'puzzle' ? 'puzzle' : ''}">${q.badge || 'Would You Rather'}</div>`;
+
+        if (q.timer) {
+            html += `<div class="timer-text" id="timerText">${q.timer}s</div>`;
+            html += `<div class="timer-bar"><div class="fill" id="timerFill" style="width:100%"></div></div>`;
+        }
+
+        html += `<div class="q-text">${q.text}</div>`;
+
+        if (q.options) {
+            html += `<div class="q-options">`;
+            q.options.forEach((opt, oi) => {
+                const sel = answers[idx] === opt ? 'selected' : '';
+                html += `<div class="opt ${sel}" onclick="selectOption(${idx}, '${opt.replace(/'/g, "\\'")}')">${opt}</div>`;
+            });
+            html += `</div>`;
+        }
+
+        if (q.input) {
+            const val = answers[idx] && answers[idx] !== '(time ran out)' ? answers[idx] : '';
+            html += `<div class="q-input"><input type="text" id="input-${idx}" value="${val}" placeholder="Your answer..." oninput="onInput(${idx})"></div>`;
+        }
+
+        if (q.type === 'trick') {
+            html += `<div id="trickFeedback-${idx}" class="trick-feedback" style="display:none"></div>`;
+        }
+
+        if (q.timer) {
+            const draftVal = drafts[idx] || '';
+            html += `<div class="scratch-area">
+                <div class="label">✏️ draft / scratch</div>
+                <textarea id="draft-${idx}" placeholder="Write or draw your ideas here..." oninput="onDraft(${idx})">${draftVal}</textarea>
+            </div>`;
+        }
+
+        const commentVal = comments[idx] || '';
+        html += `<div class="comment-area"><textarea id="comment-${idx}" placeholder="Your thoughts... écris ce que tu ressens..." oninput="onComment(${idx})">${commentVal}</textarea></div>`;
+
+        const isLast = idx === questions.length - 1;
+        const btnLabel = isLast ? 'Finish 💌' : 'Next →';
+        const btnClass = isLast ? 'nav-btn finish' : 'nav-btn next';
+        const canProceed = q.options ? !!answers[idx] : !!answers[idx] && answers[idx].trim();
+
+        html += `<div class="nav">
+            <span class="q-counter">${idx + 1} / ${questions.length}</span>
+            <div>
+                ${idx > 0 ? `<button class="nav-btn prev" onclick="prevQuestion()">← Back</button>` : ''}
+                <button class="${btnClass}" id="nextBtn" ${canProceed ? '' : 'disabled'} onclick="nextQuestion()">${btnLabel}</button>
+            </div>
+        </div>`;
+        html += `</div>`;
+
+        area.innerHTML = html;
+
+        if (q.timer) startTimer(q.timer);
+
+        if (q.input && answers[idx]) {
+            setTimeout(() => {
+                const inp = document.getElementById('input-' + idx);
+                if (inp) inp.focus();
+            }, 100);
+        }
+    }
+
+    function selectOption(idx, val) {
+        answers[idx] = val;
+        const opts = document.querySelectorAll('.q-options .opt');
+        opts.forEach(o => o.classList.remove('selected'));
+        event.target.classList.add('selected');
+        document.getElementById('nextBtn').disabled = false;
+
+        // Special message for travel question
+        const q = questions[idx];
+        if (q.specialMsg && q.msgs) {
+            const optIdx = q.options.indexOf(val);
+            const existing = document.getElementById('specialMsg-' + idx);
+            if (optIdx >= 0 && q.msgs[optIdx]) {
+                if (!existing) {
+                    const div = document.createElement('div');
+                    div.id = 'specialMsg-' + idx;
+                    div.className = 'special-msg';
+                    div.textContent = q.msgs[optIdx];
+                    document.querySelector('.q-card').appendChild(div);
+                } else {
+                    existing.textContent = q.msgs[optIdx];
+                }
+            } else {
+                if (existing) existing.remove();
+            }
+        }
+    }
+
+    function onInput(idx) {
+        answers[idx] = document.getElementById('input-' + idx).value;
+        const btn = document.getElementById('nextBtn');
+        if (btn) btn.disabled = !answers[idx].trim();
+
+        // Trick question feedback
+        const q = questions[idx];
+        if (q.type === 'trick') {
+            const val = answers[idx].trim();
+            const fb = document.getElementById('trickFeedback-' + idx);
+            if (fb) {
+                if (val === '1') {
+                    fb.style.display = 'block';
+                    fb.className = 'trick-feedback correct';
+                    fb.innerHTML = 'correct 💕<br><span style="font-size:0.85em;opacity:0.7;">me + you = one 🤍</span>';
+                } else if (val === '2' || val.match(/^\d+$/)) {
+                    fb.style.display = 'block';
+                    fb.className = 'trick-feedback wrong';
+                    fb.innerHTML = 'wrong ✖️<br><span style="font-size:0.85em;opacity:0.7;">me + you = 1 💕</span>';
+                } else {
+                    fb.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function onDraft(idx) {
+        drafts[idx] = document.getElementById('draft-' + idx).value;
+    }
+
+    function onComment(idx) {
+        comments[idx] = document.getElementById('comment-' + idx).value;
+    }
+
+    function nextQuestion() {
+        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+        const cta = document.getElementById('comment-' + current);
+        if (cta) comments[current] = cta.value;
+        current++;
+        renderQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function prevQuestion() {
+        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+        const cta = document.getElementById('comment-' + current);
+        if (cta) comments[current] = cta.value;
+        current--;
+        renderQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function sendAll() {
+        let body = '';
+        questions.forEach((q, i) => {
+            const qText = q.text.replace(/<[^>]*>/g, '');
+            body += `\n--- Question ${i + 1} ---\n${qText}\nAnswer: ${answers[i] || '(no answer)'}\n`;
+            if (drafts[i]) body += `Draft: ${drafts[i]}\n`;
+            if (comments[i]) body += `Comment: ${comments[i]}\n`;
+        });
+
+        fetch(formspreeUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                _subject: `💭 Game completed — all ${questions.length} answers!`,
+                message: body
+            })
+        }).catch(() => {});
+    }
+
+    function showEnd() {
+        renderDots();
+        area.innerHTML = `
+            <div class="end-screen">
+                <h2>All done! 💕</h2>
+                <p>Thank you for playing — every answer means the world to me 🤍</p>
+            </div>
+        `;
+    }
+
+    renderQuestion();
+</script>
+</body>
+</html>
